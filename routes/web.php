@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\TokenVerificationMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +20,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// User Logout
+Route::get('/logout',[UserController::class,'UserLogout']);
 
+// User Authentication
 Route::post('/user-registration', [UserController::class, 'userRegistration']);
 Route::post('/user-login', [UserController::class, 'userLogin']);
 Route::post('/send-otp', [UserController::class, 'SendOTPCode']);
 Route::post('/verify-otp',[UserController::class,'VerifyOTP']);
 Route::post('/reset-password',[UserController::class,'ResetPassword'])->middleware([TokenVerificationMiddleware::class]);
+
+//Task api
+Route::post("/create-task",[TaskController::class,'CreateTask'])->middleware([TokenVerificationMiddleware::class]);
+Route::post("/delete-task",[TaskController::class,'DeleteTask'])->middleware([TokenVerificationMiddleware::class]);
+Route::post("/update-task",[TaskController::class,'UpdateTask'])->middleware([TokenVerificationMiddleware::class]);
+Route::get("/list-task",[TaskController::class,'TaskList'])->middleware([TokenVerificationMiddleware::class]);

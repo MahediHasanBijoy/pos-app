@@ -39,17 +39,16 @@ class UserController extends Controller
     function userLogin(Request $request){
         $count=User::where('email','=',$request->input('email'))
              ->where('password','=',$request->input('password'))
-             ->count();
+             ->select('id')->first();
         
-        if($count==1){
+        if($count!== null){
             // User Login-> JWT Token Issue
-            $token=JWTToken::CreateToken($request->input('email'));
+            $token=JWTToken::CreateToken($request->input('email'), $count->id);
             
             return response()->json([
                 'status' => 'success',
                 'message' => 'User Login Successful',
-                'token'=>$token
-            ],200);
+            ],200)->cookie('token', $token, 60*24*30);
         }
         else{
             return response()->json([
@@ -87,6 +86,7 @@ class UserController extends Controller
      }
  
      function VerifyOTP(Request $request){
+
          $email=$request->input('email');
          $otp=$request->input('otp');
          $count=User::where('email','=',$email)
@@ -101,8 +101,7 @@ class UserController extends Controller
              return response()->json([
                  'status' => 'success',
                  'message' => 'OTP Verification Successful',
-                 'token'=>$token
-             ],200);
+             ],200)->cookie('token', $token, 60*24*30);
  
  
          }
@@ -133,4 +132,10 @@ class UserController extends Controller
          }
 
      }
+
+
+
+    public function UserLogout(){
+        return redirect('/user-login')->cookie('token','',-1);
+    }
 }
