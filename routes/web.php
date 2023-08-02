@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Middleware\TokenVerificationMiddleware;
 
 /*
@@ -35,3 +36,12 @@ Route::post("/create-task",[TaskController::class,'CreateTask'])->middleware([To
 Route::post("/delete-task",[TaskController::class,'DeleteTask'])->middleware([TokenVerificationMiddleware::class]);
 Route::post("/update-task",[TaskController::class,'UpdateTask'])->middleware([TokenVerificationMiddleware::class]);
 Route::get("/list-task",[TaskController::class,'TaskList'])->middleware([TokenVerificationMiddleware::class]);
+
+
+// Customer API
+Route::post("/create-customer",[CustomerController::class,'CustomerCreate'])->middleware([TokenVerificationMiddleware::class]);
+Route::get("/list-customer",[CustomerController::class,'CustomerList'])->middleware([TokenVerificationMiddleware::class]);
+Route::post("/delete-customer",[CustomerController::class,'CustomerDelete'])->middleware([TokenVerificationMiddleware::class]);
+Route::post("/update-customer",[CustomerController::class,'CustomerUpdate'])->middleware([TokenVerificationMiddleware::class]);
+Route::post("/customer-by-id",[CustomerController::class,'CustomerByID'])->middleware([TokenVerificationMiddleware::class]);
+Route::get('/promotional-mail', [CustomerController::class, 'SendPromotionalMail'])->middleware([TokenVerificationMiddleware::class]);
